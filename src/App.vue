@@ -1,3 +1,13 @@
+<script>
+import { auth } from './firebase';
+
+console.log(auth);
+
+export default {
+  name: 'App',
+};
+</script>
+
 <template>
   <div id="app">
     <div id="nav">
