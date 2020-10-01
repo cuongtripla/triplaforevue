@@ -1,4 +1,5 @@
 <script>
+// import axios from 'axios';
 import firebase from 'firebase/app';
 import { auth } from '../firebase';
 import 'firebase/auth';
@@ -47,8 +48,47 @@ export default {
           // TODO: sign up code
         } else {
           const provider = new firebase.auth.GoogleAuthProvider();
+          const scopes = [
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/youtube',
+          ];
 
-          await auth.signInWithPopup(provider);
+          scopes.forEach((scope) => { provider.addScope(scope); });
+
+          const result = await auth.signInWithPopup(provider);
+          console.log(result);
+          const { refreshToken } = result.user;
+          const { accessToken } = result.credential;
+          console.log(`refreshToken: ${refreshToken}`);
+          console.log(`accessToken: ${accessToken}`);
+          const url = 'https://www.googleapis.com/youtube/v3/videos';
+          const bodyyy = {
+            id: 'wUHmtZdUZxA',
+            snippet: {
+              title: 'th ai thai sac thai',
+              categoryId: '1',
+            },
+          };
+
+          try {
+            const response = await fetch(`${url}?part=snippet`, {
+              method: 'PUT',
+              mode: 'cors',
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(bodyyy),
+            });
+
+            // Examine the text in the response
+            const jsonResponse = await response.json();
+            console.log(jsonResponse);
+          } catch (error) {
+            console.log('Fetch Error: ', error);
+          }
         }
       } catch (error) {
         this.errorMessage = error.message;
