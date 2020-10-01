@@ -1,5 +1,7 @@
 <script>
+import firebase from 'firebase/app';
 import { auth } from '../firebase';
+import 'firebase/auth';
 
 export default {
   name: 'Login',
@@ -22,7 +24,7 @@ export default {
     signInAnonymously() {
       auth.signInAnonymously();
     },
-    async signInOrCreateUser() {
+    async signInOrCreateUserWithEmailAndPassword() {
       this.loading = true;
 
       try {
@@ -37,19 +39,56 @@ export default {
 
       this.loading = false;
     },
+    async signInWithGoogle() {
+      this.loading = true;
+
+      try {
+        if (this.newUser) {
+          // TODO: sign up code
+        } else {
+          const provider = new firebase.auth.GoogleAuthProvider();
+
+          await auth.signInWithPopup(provider);
+        }
+      } catch (error) {
+        this.errorMessage = error.message;
+      }
+
+      this.loading = false;
+    },
   },
 };
 </script>
 
 <template>
   <div>
-    <h3>Sign In Anonymously</h3>
     <b-button
+      v-if="!loading"
       variant="primary"
+      class="mx-2"
+      @click="signInWithGoogle"
+    >
+      Sign In With Google
+    </b-button>
+    <b-spinner
+      v-else
+      variant="primary"
+      label="Spinning"
+    />
+
+    <b-button
+      v-if="!loading"
+      variant="primary"
+      class="mx-2"
       @click="signInAnonymously"
     >
-      Sign In
+      Sign In Anonymously
     </b-button>
+    <b-spinner
+      v-else
+      variant="primary"
+      label="Spinning"
+    />
 
     <div v-if="newUser">
       <h3>Sign Up With Email</h3>
@@ -71,7 +110,7 @@ export default {
     </div>
 
     <b-form
-      @submit="signInOrCreateUser"
+      @submit="signInOrCreateUserWithEmailAndPassword"
     >
       <b-form-group
         label="Email:"
