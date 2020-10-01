@@ -1,3 +1,4 @@
+import VueCompositionApi from '@vue/composition-api';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -10,6 +11,7 @@ import store from './store';
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(firestorePlugin);
+Vue.use(VueCompositionApi);
 
 Vue.config.productionTip = false;
 

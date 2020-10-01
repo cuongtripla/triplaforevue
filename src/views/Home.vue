@@ -1,21 +1,27 @@
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import Login from '@/components/Login.vue';
+import User from '@/components/User.vue';
+import UserProfile from '@/components/UserProfile.vue';
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld,
+    Login,
+    User,
+    UserProfile,
   },
 };
 </script>
 
 <template>
-  <div class="home">
-    <img
-      alt="Vue logo"
-      src="../assets/logo.png"
-    >
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div>
+    <User>
+      <template #user="{user}">
+        <div v-if="user">
+          <UserProfile :user="user" />
+        </div>
+        <Login v-else />
+      </template>
+    </User>
   </div>
 </template>
